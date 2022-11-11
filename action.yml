@@ -1,0 +1,51 @@
+name: "Build and Push to GCR"
+author: "SafeHouse Tech."
+description: |-
+  An action to build and push docker images to GCR.
+inputs:
+  build_arguments:
+    description: |-
+      Arguments required during the build phase.
+      TODO: fill the list of required variable names.
+    required: false
+  credentials_json:
+    description: |-
+      XXX YYY
+    required: true
+  project_id:
+    description: |-
+      XXX YYY
+    required: true
+  service_id:
+    description: |-
+      XXX YYY
+    required: true
+  tag:
+    description: |-
+      container tage
+    default: latest
+  version:
+    description: |-
+      container tage
+    required: true
+
+runs:
+  steps:
+    - name: "Checkout Repository"
+    - uses: actions/checkout@v3
+    - name: "gcloud auth"
+      uses: "google-github-actions/auth@v0"
+      with:
+        credentials_json: ${{ inputs.credentials_json }}
+    - uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ inputs.project_id }}
+    - name: "Configure Docker Credentials Helper"
+      run: gcloud --quiet auth configure-docker
+    - name: Build and publish
+      run: |-
+        export LD_LIBRARY_PATH=/usr/local/lib
+        export CLOUDSDK_PYTHON=/usr/bin/python
+        docker build --tag gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} --tag gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.version }} .
+        docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
+        docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.version }}
