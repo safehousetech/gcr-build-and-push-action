@@ -10,23 +10,23 @@ inputs:
     required: false
   credentials_json:
     description: |-
-      XXX YYY
+      Credential file for GCP authentication.
     required: true
   project_id:
     description: |-
-      XXX YYY
+      GCP project ID.
     required: true
   service_id:
     description: |-
-      XXX YYY
+      This is the name of the service you want to build and push.
     required: true
   tag:
     description: |-
-      container tage
+      container tag
     default: latest
   version:
     description: |-
-      container tage
+      container tag
     required: true
 
 runs:
