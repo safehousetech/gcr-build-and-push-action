@@ -32,7 +32,7 @@ inputs:
 runs:
   steps:
     - name: "Checkout Repository"
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
     - name: "gcloud auth"
       uses: "google-github-actions/auth@v0"
       with:
