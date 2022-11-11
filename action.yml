@@ -63,10 +63,12 @@ runs:
     - name: Bump version and push tag
       id: tag_version
       uses: mathieudutour/github-tag-action@v5.6
+      if: ${{ inputs.environment == production }}
       with:
         github_token: ${{ inputs.action_token }}
     - name: Create a GitHub release
       uses: ncipollo/release-action@v1
+      if: ${{ inputs.environment == production }}
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}
         name: ${{ steps.tag_version.outputs.new_tag }}
@@ -74,9 +76,8 @@ runs:
         run: echo ${{ steps.tag_version.outputs.new_tag }}
     - name: Tag and publish
       shell: bash
+      if: ${{ inputs.environment == production }}
       run: |-
-          if [[ "${{inputs.environment}}" != "production" ]] | grep -c "true"
-          then
-            gcloud --quiet auth configure-docker
-            docker tag gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
-            docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
+          gcloud --quiet auth configure-docker
+          docker tag gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
+          docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
