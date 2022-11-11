@@ -41,8 +41,10 @@ runs:
       with:
         project_id: ${{ inputs.project_id }}
     - name: "Configure Docker Credentials Helper"
+      shell: bash
       run: gcloud --quiet auth configure-docker
     - name: Build and publish
+      shell: bash
       run: |-
         export LD_LIBRARY_PATH=/usr/local/lib
         export CLOUDSDK_PYTHON=/usr/bin/python
