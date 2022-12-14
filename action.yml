@@ -36,6 +36,11 @@ inputs:
     description: |-
       Environment on which service needs to be publish
     default: development
+  docker_build_args:
+    description: |-
+      Build arguments required to build docker images
+    required: false
+    
 
 runs:
   using: "composite"
@@ -57,7 +62,7 @@ runs:
       run: |-
         export LD_LIBRARY_PATH=/usr/local/lib
         export CLOUDSDK_PYTHON=/usr/bin/python
-        docker build -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
+        docker build ${{ inputs.docker_build_args }} -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
         docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
         
     - name: Bump version and push tag
