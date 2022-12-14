@@ -3,11 +3,6 @@ author: "SafeHouse Tech."
 description: |-
   An action to build and push docker images to GCR.
 inputs:
-  build_arguments:
-    description: |-
-      Arguments required during the build phase.
-      TODO: fill the list of required variable names.
-    required: false
   credentials_json:
     description: |-
       Credential file for GCP authentication.
@@ -36,11 +31,10 @@ inputs:
     description: |-
       Environment on which service needs to be publish
     default: development
-  docker_build_args:
+  build_args:
     description: |-
       Build arguments required to build docker images
     required: false
-    
 
 runs:
   using: "composite"
@@ -48,10 +42,10 @@ runs:
     - name: "Checkout Repository"
       uses: actions/checkout@v3
     - name: "gcloud auth"
-      uses: "google-github-actions/auth@v0"
+      uses: "google-github-actions/auth@v1"
       with:
         credentials_json: ${{ inputs.credentials_json }}
-    - uses: google-github-actions/setup-gcloud@v0
+    - uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: ${{ inputs.project_id }}
     - name: "Configure Docker Credentials Helper"
@@ -62,9 +56,9 @@ runs:
       run: |-
         export LD_LIBRARY_PATH=/usr/local/lib
         export CLOUDSDK_PYTHON=/usr/bin/python
-        docker build ${{ inputs.docker_build_args }} -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
+        docker build ${{ inputs.build_args }} -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
         docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
-        
+
     - name: Bump version and push tag
       id: tag_version
       if: ${{ inputs.build_environment == 'production' }}
@@ -83,6 +77,6 @@ runs:
       shell: bash
       if: ${{ inputs.build_environment == 'production' }}
       run: |-
-          gcloud --quiet auth configure-docker
-          docker tag gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
-          docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
+        gcloud --quiet auth configure-docker
+        docker tag gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
+        docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
