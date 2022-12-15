@@ -61,7 +61,7 @@ runs:
             BUILD_PARAMS="$BUILD_PARAMS --build-arg ${ARG}"
         done
         fi
-        echo $BUILD_PARAMS;
+        echo "$BUILD_PARAMS"
         docker build $BUILD_PARAMS -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
         docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
 
