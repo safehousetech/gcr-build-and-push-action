@@ -56,7 +56,12 @@ runs:
       run: |-
         export LD_LIBRARY_PATH=/usr/local/lib
         export CLOUDSDK_PYTHON=/usr/bin/python
-        docker build ${{ inputs.build_args }} -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
+        if [ ! -z "${{ inputs.build_args }}" ]; then
+        for ARG in $(echo "${{ inputs.build_args }}" | tr ',' '\n'); do
+            BUILD_PARAMS="$BUILD_PARAMS --build-arg ${ARG}"
+        done
+        fi
+        docker build $BUILD_PARAMS -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
         docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
 
     - name: Bump version and push tag
