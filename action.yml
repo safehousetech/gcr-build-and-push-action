@@ -63,25 +63,3 @@ runs:
         fi
         docker build $BUILD_PARAMS -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
         docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
-
-    - name: Bump version and push tag
-      id: tag_version
-      if: ${{ inputs.build_environment == 'production' }}
-      uses: mathieudutour/github-tag-action@v5.6
-      with:
-        github_token: ${{ inputs.action_token }}
-    - name: Create a GitHub release
-      if: ${{ inputs.build_environment == 'production' }}
-      uses: ncipollo/release-action@v1
-      with:
-        tag: ${{ steps.tag_version.outputs.new_tag }}
-        name: ${{ steps.tag_version.outputs.new_tag }}
-        body: ${{ steps.tag_version.outputs.changelog }}
-        run: echo ${{ steps.tag_version.outputs.new_tag }}
-    - name: Tag and publish
-      shell: bash
-      if: ${{ inputs.build_environment == 'production' }}
-      run: |-
-        gcloud --quiet auth configure-docker
-        docker tag gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
-        docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:"${{ steps.tag_version.outputs.new_tag }}"
