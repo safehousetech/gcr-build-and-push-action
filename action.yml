@@ -64,5 +64,7 @@ runs:
         done
         fi
         VERSION=$(git log -1 --pretty=%h)
-        docker build $BUILD_PARAMS -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:$VERSION -t gcr.io/{{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
+        docker build $BUILD_PARAMS -t gcr.io/{{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
+        docker tag gcr.io/{{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:$VERSION
         docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
+        docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:$VERSION
