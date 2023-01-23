@@ -53,7 +53,6 @@ runs:
     - name: "Configure Docker Credentials Helper"
       shell: bash
       run: gcloud --quiet auth configure-docker
-      shell: bash  
     - name: Build and publish
       shell: bash
       run: |-
