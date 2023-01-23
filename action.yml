@@ -36,6 +36,8 @@ inputs:
       Build arguments required to build docker images
     required: false
 
+   
+
 runs:
   using: "composite"
   steps:
@@ -51,6 +53,7 @@ runs:
     - name: "Configure Docker Credentials Helper"
       shell: bash
       run: gcloud --quiet auth configure-docker
+      shell: bash  
     - name: Build and publish
       shell: bash
       run: |-
@@ -61,5 +64,6 @@ runs:
             BUILD_PARAMS="$BUILD_PARAMS --build-arg ${ARG}"
         done
         fi
-        docker build $BUILD_PARAMS -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
+        VERSION=$(git log -1 --pretty=%h)
+        docker build $BUILD_PARAMS -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:$VERSION -t gcr.io/{{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
         docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
