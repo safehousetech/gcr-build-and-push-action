@@ -3,7 +3,7 @@ author: "SafeHouse Tech."
 description: |-
   An action to build and push docker images to GCR.
 env:
-   GIT_COMMIT_SHA:  ${{ git log -1 --pretty=%h }}
+   GIT_COMMIT_SHA:  ${{ GITHUB_SHA}}
    
 inputs:
   credentials_json:
