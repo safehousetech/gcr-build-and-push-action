@@ -2,6 +2,9 @@ name: "Build and Push to GCR"
 author: "SafeHouse Tech."
 description: |-
   An action to build and push docker images to GCR.
+env:
+   GIT_COMMIT_SHA:  ${{ git log -1 --pretty=%h }}
+   
 inputs:
   credentials_json:
     description: |-
@@ -63,7 +66,6 @@ runs:
             BUILD_PARAMS="$BUILD_PARAMS --build-arg ${ARG}"
         done
         fi
-        GIT_COMMIT_SHA=$(git log -1 --pretty=%h)
         docker build $BUILD_PARAMS -t gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} .
         docker tag gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }} gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:$GIT_COMMIT_SHA
         docker push gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
