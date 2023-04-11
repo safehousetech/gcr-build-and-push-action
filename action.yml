@@ -84,7 +84,6 @@ runs:
         context: .
         push: true
         build_args: ${{ inputs.build_args }}
-        no-cache-filters: install
         tags: |
           gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
           gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ github.sha }}
