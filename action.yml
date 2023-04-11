@@ -87,7 +87,7 @@ runs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        builder: ${{ steps.buildx.outputs.name }}
+        #builder: ${{ steps.buildx.outputs.name }}
         push: true
         tags: |
           gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
