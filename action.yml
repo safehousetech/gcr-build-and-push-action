@@ -97,6 +97,7 @@ runs:
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
     - name: Move cache
+      shell: bash
       run: |
         rm -rf /tmp/.buildx-cache
         mv /tmp/.buildx-cache-new /tmp/.buildx-cache
