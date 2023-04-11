@@ -86,7 +86,6 @@ runs:
         push: true
         tags: |
           gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
-          gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
