@@ -53,20 +53,16 @@ runs:
       with:
         project_id: ${{ inputs.project_id }}
 
-    - name: Set up Docker Buildx
-      id: buildx
-      uses: docker/setup-buildx-action@master
-      with:
-        install: true
+    - uses: docker/setup-buildx-action@v1
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        # Key is named differently to avoid collision
-        key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-multi-buildx
+    # - name: Cache Docker layers
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: /tmp/.buildx-cache
+    #     # Key is named differently to avoid collision
+    #     key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-multi-buildx
 
     - name: "Configure Docker Credentials Helper"
       shell: bash
@@ -87,22 +83,18 @@ runs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        #builder: ${{ steps.buildx.outputs.name }}
         push: true
         tags: |
           gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
           gcr.io/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ github.sha }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        # Note the mode=max here
-        # More: https://github.com/moby/buildkit#--export-cache-options
-        # And: https://github.com/docker/buildx#--cache-tonametypetypekeyvalue
-        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
-    - name: Move cache
-      shell: bash
-      run: |
-        rm -rf /tmp/.buildx-cache
-        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+    # - name: Move cache
+    #   shell: bash
+    #   run: |
+    #     rm -rf /tmp/.buildx-cache
+    #     mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
     # - name: Build and publish
     #   shell: bash
