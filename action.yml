@@ -57,7 +57,7 @@ runs:
 
     - name: "Configure Docker Credentials Helper"
       shell: bash
-      run: gcloud --quiet auth configure-docker asia-docker.pkg.dev/${{ inputs.project_id }}/asia.gcr.io
+      run: gcloud --quiet auth configure-docker asia-docker.pkg.dev
 
     - name: Build image
       uses: docker/build-push-action@v4
