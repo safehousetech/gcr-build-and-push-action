@@ -66,7 +66,7 @@ runs:
         push: true
         build-args: ${{ inputs.build_args }}
         tags: |
-          asia-docker.pkg.dev/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ inputs.tag }}
-          asia-docker.pkg.dev/${{ inputs.project_id }}/safehouse/${{ inputs.service_id }}:${{ github.sha }}
+          asia-docker.pkg.dev/${{ inputs.project_id }}/${{ inputs.service_id }}:${{ inputs.tag }}
+          asia-docker.pkg.dev/${{ inputs.project_id }}/${{ inputs.service_id }}:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
